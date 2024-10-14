@@ -68,7 +68,7 @@ def play():
 
                         # MCTS search for AI move
                         print("MCTS is thinking...")
-                        mcts.search(5)  # 1 second time limit
+                        mcts.search(10)  # 1 second time limit
                         move = mcts.best_move()
 
                         state.move(move)
@@ -88,6 +88,7 @@ def play():
 
         pygame.display.update()
 
+    pygame.display.update()
     pygame.time.wait(3000)
 
 if __name__ == "__main__":
