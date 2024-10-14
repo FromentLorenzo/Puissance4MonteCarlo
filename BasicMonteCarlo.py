@@ -95,58 +95,120 @@ pygame.display.update()
  
 myfont = pygame.font.SysFont("monospace", 75)
  
+import random
+
+# Monte Carlo Simulation parameters
+SIMULATIONS = 200
+
+def monte_carlo(board, piece):
+    # Vérifier si on peut gagner immédiatement
+    for col in range(COLUMN_COUNT):
+        if is_valid_location(board, col):
+            row = get_next_open_row(board, col)
+            temp_board = board.copy()
+            drop_piece(temp_board, row, col, piece)
+            if winning_move(temp_board, piece):  # Si on gagne immédiatement
+                return col  # Jouer ce coup gagnant
+
+    # Vérifier si l'adversaire peut gagner et bloquer
+    opponent_piece = 3 - piece
+    for col in range(COLUMN_COUNT):
+        if is_valid_location(board, col):
+            row = get_next_open_row(board, col)
+            temp_board = board.copy()
+            drop_piece(temp_board, row, col, opponent_piece)
+            if winning_move(temp_board, opponent_piece):  # Si l'adversaire gagne
+                return col  # Bloquer l'adversaire
+
+    # Simulations Monte Carlo
+    win_counts = np.zeros(COLUMN_COUNT)
+    for col in range(COLUMN_COUNT):
+        if is_valid_location(board, col):
+            for _ in range(SIMULATIONS):
+                temp_board = board.copy()
+                row = get_next_open_row(temp_board, col)
+                drop_piece(temp_board, row, col, piece)
+
+                # Simuler le jeu aléatoire
+                result = simulate_random_game(temp_board, piece)
+                if result == piece:
+                    win_counts[col] += 1
+
+    # Choisir la colonne avec le plus de victoires simulées
+    best_col = np.argmax(win_counts)
+    return best_col
+
+
+def simulate_random_game(board, piece):
+    """Simulates a random game until it ends and returns the winning piece."""
+    current_piece = piece
+    while not is_game_over(board):
+        valid_moves = [c for c in range(COLUMN_COUNT) if is_valid_location(board, c)]
+        col = random.choice(valid_moves)
+        row = get_next_open_row(board, col)
+        drop_piece(board, row, col, current_piece)
+
+        if winning_move(board, current_piece):
+            return current_piece
+        current_piece = 3 - current_piece  # Switch between 1 and 2
+    return 0  # Draw
+
+def is_game_over(board):
+    # Check for a win or a full board (no valid locations)
+    if winning_move(board, 1) or winning_move(board, 2):
+        return True
+    return np.all(board[ROW_COUNT-1] != 0)
+
+
 while not game_over:
- 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
- 
+
         if event.type == pygame.MOUSEMOTION:
-            pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
+            pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
             posx = event.pos[0]
             if turn == 0:
-                pygame.draw.circle(screen, RED, (posx, int(SQUARESIZE/2)), RADIUS)
-            else: 
-                pygame.draw.circle(screen, YELLOW, (posx, int(SQUARESIZE/2)), RADIUS)
-        pygame.display.update()
- 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
-            #print(event.pos)
-            # Ask for Player 1 Input
-            if turn == 0:
-                posx = event.pos[0]
-                col = int(math.floor(posx/SQUARESIZE))
- 
-                if is_valid_location(board, col):
-                    row = get_next_open_row(board, col)
-                    drop_piece(board, row, col, 1)
- 
-                    if winning_move(board, 1):
-                        label = myfont.render("Player 1 wins!!", 1, RED)
-                        screen.blit(label, (40,10))
-                        game_over = True
- 
- 
-            # # Ask for Player 2 Input
-            else:               
-                posx = event.pos[0]
-                col = int(math.floor(posx/SQUARESIZE))
- 
+                pygame.draw.circle(screen, RED, (posx, int(SQUARESIZE / 2)), RADIUS)
+            pygame.display.update()
+
+        if event.type == pygame.MOUSEBUTTONDOWN and turn == 0:  # Seulement pour le joueur 1
+            pygame.draw.rect(screen, BLACK, (0, 0, width, SQUARESIZE))
+            posx = event.pos[0]
+            col = int(math.floor(posx / SQUARESIZE))
+
+            if is_valid_location(board, col):
+                row = get_next_open_row(board, col)
+                drop_piece(board, row, col, 1)
+
+                if winning_move(board, 1):
+                    label = myfont.render("Player 1 wins!!", 1, RED)
+                    screen.blit(label, (40, 10))
+                    game_over = True
+
+            print_board(board)
+            draw_board(board)
+
+            turn += 1
+            turn = turn % 2
+
+            # Monte Carlo joue immédiatement après le joueur 1
+            if not game_over and turn == 1:
+                col = monte_carlo(board, 2)
                 if is_valid_location(board, col):
                     row = get_next_open_row(board, col)
                     drop_piece(board, row, col, 2)
- 
+
                     if winning_move(board, 2):
                         label = myfont.render("Player 2 wins!!", 1, YELLOW)
-                        screen.blit(label, (40,10))
+                        screen.blit(label, (40, 10))
                         game_over = True
- 
-            print_board(board)
-            draw_board(board)
- 
-            turn += 1
-            turn = turn % 2
- 
+
+                print_board(board)
+                draw_board(board)
+
+                turn += 1
+                turn = turn % 2
+
             if game_over:
                 pygame.time.wait(3000)
