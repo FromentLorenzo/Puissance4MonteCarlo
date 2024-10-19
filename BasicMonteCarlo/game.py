@@ -54,10 +54,6 @@ def play():
                         state.move(col)
                         mcts.move(col)
 
-                        # Debugging: print the board to console
-                        print("Player 1's move:")
-                        state.print()
-
                         state.draw_board(screen, SQUARESIZE)
 
                         if state.game_over():
@@ -68,15 +64,13 @@ def play():
 
                         # MCTS search for AI move
                         print("MCTS is thinking...")
-                        mcts.search(10)  # 1 second time limit
+                        mcts.search(10)  
+                        num_rollouts, run_time = mcts.statistics()
+                        print("Statistics: ", num_rollouts, "rollouts in", run_time, "seconds")
                         move = mcts.best_move()
 
                         state.move(move)
                         mcts.move(move)
-
-                        # Debugging: print the board to console
-                        print("MCTS's move:")
-                        state.print()
 
                         state.draw_board(screen, SQUARESIZE)
 

@@ -14,6 +14,10 @@ class ConnectState:
         return deepcopy(self.board)
 
     def move(self, col):
+        if self.height[col] < 0:
+            self.print()
+            raise ValueError(f"Column {col} is full!")
+
         self.board[self.height[col]][col] = self.to_play
         self.last_played = [self.height[col], col]
         self.height[col] -= 1
