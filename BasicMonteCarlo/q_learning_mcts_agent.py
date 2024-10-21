@@ -35,7 +35,7 @@ class QLearningAgent:
         """Choose an action using MCTS."""
         # Initialize MCTS with the current state
         mcts = MCTS(state)
-        mcts.search(time_limit=1.0)  # Set a time limit for MCTS search (1 second here)
+        mcts.search(time_limit=0.1)  # Set a time limit for MCTS search (1 second here)
         return mcts.best_move()
 
     def update_q_value(self, state, action, reward, next_state):
@@ -106,6 +106,8 @@ class QLearningAgent:
         self.save_q_table()
 
 if __name__ == "__main__":
-    agent = QLearningAgent(num_games=100)
-    agent.load_q_table()  # Load existing Q-table if available
-    agent.train()  # Train the agent by playing against itself
+    for i in range(100): # Launching 10000 training game, saving Q-table every hundred
+        agent = QLearningAgent(num_games=100)
+        agent.load_q_table()  # Load existing Q-table if available
+        agent.train()  # Train the agent by playing against itself
+        print(f"{i}% done")

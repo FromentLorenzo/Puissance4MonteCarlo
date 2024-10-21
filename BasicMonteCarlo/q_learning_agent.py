@@ -115,6 +115,6 @@ class QLearningAgent:
         self.save_q_table()
 
 if __name__ == "__main__":
-    agent = QLearningAgent(num_games=10000)
+    agent = QLearningAgent(num_games=100)
     agent.load_q_table()  # Load existing Q-table if available
     agent.train()  # Train the agent by playing against itself

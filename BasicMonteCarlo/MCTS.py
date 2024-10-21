@@ -106,6 +106,7 @@ class MCTS:
         max_value = max(self.root.children.values(), key=lambda n: n.N).N
         max_nodes = [n for n in self.root.children.values() if n.N == max_value]
         best_child = random.choice(max_nodes)
+        #sprint(max_value)
 
         return best_child.move
 
@@ -120,3 +121,35 @@ class MCTS:
 
     def statistics(self) -> tuple:
         return self.num_rollouts, self.run_time
+
+    def get_confidence_for_best_move(self, move) -> tuple:
+        """
+        Return the confidence for the given move based on MCTS statistics.
+        
+        Confidence can be determined by two factors:
+        1. The win rate of the move (Q / N).
+        2. The number of rollouts (N) for the move compared to other moves.
+        
+        :param move: The move for which we want to get the confidence.
+        :return: (win_rate, rollout_proportion)
+        """
+        if move not in self.root.children:
+            return 0.0, 0  # Move has not been explored by MCTS
+
+        best_child = self.root.children[move]
+
+        # Win rate of the move: Q / N
+        if best_child.N == 0:
+            win_rate = 0  # If the node has not been visited, win rate is undefined, so set to 0.
+        else:
+            win_rate = best_child.Q / best_child.N
+
+        # Rollout proportion: N of this move / total N of all moves
+        total_rollouts = sum(child.N for child in self.root.children.values())
+        if total_rollouts == 0:
+            rollout_proportion = 0  # To avoid division by zero
+        else:
+            rollout_proportion = best_child.N / total_rollouts
+
+        return win_rate, rollout_proportion
+
