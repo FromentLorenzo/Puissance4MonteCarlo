@@ -16,7 +16,7 @@ class HybridAgent:
         win_probability, _ = self.mcts.get_confidence_for_best_move(move)
 
         # Define a threshold for MCTS confidence
-        confidence_threshold = 0.5  # Example threshold: MCTS must have high confidence in the move
+        confidence_threshold = 0.55  # Example threshold: MCTS must have high confidence in the move
         print(f"MCTS chooses move {move} with {win_probability*100}% confidence.")
         # If MCTS is confident enough (above threshold), use its move
         if win_probability > confidence_threshold:

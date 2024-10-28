@@ -64,7 +64,7 @@ def play():
 
                         # MCTS search for AI move
                         print("MCTS is thinking...")
-                        mcts.search(5)  
+                        mcts.search(5.0)  
                         num_rollouts, run_time = mcts.statistics()
                         print("Statistics: ", num_rollouts, "rollouts in", run_time, "seconds")
                         move = mcts.best_move()
