@@ -9,7 +9,7 @@ class HybridAgent:
         """Choose an action using MCTS or fallback to Q-learning if MCTS is uncertain."""
         # Run MCTS search
         self.mcts = MCTS(state)
-        self.mcts.search(time_limit=0.1)  # Run MCTS with a time limit of 5 second
+        self.mcts.search(time_limit=5.0)  # Run MCTS with a time limit of 5 second
 
         # Get the statistics for MCTS rollouts and best move
         move = self.mcts.best_move()

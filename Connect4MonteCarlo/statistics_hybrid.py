@@ -14,7 +14,7 @@ def play_game(hybrid_agent, mcts, starting_player="Q"):
             move = hybrid_agent.choose_action(state)
         else:
             mcts = MCTS(state)
-            mcts.search(time_limit=0.1)  # Run MCTS for 1 second
+            mcts.search(time_limit=1.0)  # Run MCTS for 1 second
             move = mcts.best_move()
         
         state.move(move)
