@@ -13,12 +13,12 @@ Notre projet nécessite Python 3, Numpy et Pygame.
 ## Comment utiliser notre projet ?
 
 Pour lancer une partie contre notre agent hybride :  
-`python game_with_hybrid.py`
+`python game_with_hybrid.py`   
 Pour créer et remplir notre Q-table :   
-`python q_learning_mcts_agent.py`
+`python q_learning_mcts_agent.py`  
 Pour obtenir des statistiques entre deux agents :  
-`python statistics.py`
-`python statistics_hybrid.py`
+`python statistics.py`  
+`python statistics_hybrid.py`  
 
 ## Statistiques
 
