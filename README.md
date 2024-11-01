@@ -48,7 +48,7 @@ Pour obtenir des statistiques entre deux agents :
 
 ### Sources
 
-Connect 4 Display using Pygame : 
-https://www.askpython.com/python/examples/connect-four-game 
-Connect 4 MCTS (Monte Carlo Tree Search) implementation :
-https://www.harrycodes.com/blog/monte-carlo-tree-search#monte-carlo-tree-search-mcts
+Connect 4 Display using Pygame :  
+https://www.askpython.com/python/examples/connect-four-game  
+Connect 4 MCTS (Monte Carlo Tree Search) implementation :  
+https://www.harrycodes.com/blog/monte-carlo-tree-search#monte-carlo-tree-search-mcts  
